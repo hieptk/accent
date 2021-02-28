@@ -1,9 +1,11 @@
 import pandas as pd
 
 from helper import get_model, get_scores
+import tensorflow.compat.v1 as tf
 
 
 def get_rec():
+    tf.reset_default_graph()
     model = get_model()
     k = 20
     users = []

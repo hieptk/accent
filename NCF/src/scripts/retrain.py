@@ -29,6 +29,7 @@ def retrain(algo, ks):
     args = parse_args()
     np.random.seed(1802)
 
+    tf.reset_default_graph()
     model = get_model(use_recs=True)
 
     for row in inputs.itertuples():
