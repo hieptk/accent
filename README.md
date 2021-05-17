@@ -31,7 +31,9 @@ pip3 install -r requirements.txt
 ```
 
 ## Dataset
-We use the popular MovieLens 100K dataset (https://grouplens.org/datasets/movielens/100k/), which contains 100K ratings on a 1 − 5 scale by 943 users on 1682 movies. To conform to the implicit feedback setting in RCF, we binarized ratings to a positive label if it is 3 or above, and a negative label otherwise. We removed all users with < 10 positive ratings or < 10 negative ratings so that the profiles are big and balanced enough for learning discriminative user models. This pruning results in 452 users, 1654 movies, and 61054 interactions in our dataset. 
+We use the popular MovieLens 100K dataset (https://grouplens.org/datasets/movielens/100k/), which contains 100K ratings on a 1 − 5 scale by 943 users on 1682 movies. To conform to the implicit feedback setting in RCF, we binarized ratings to a positive label if it is 3 or above, and a negative label otherwise. We removed all users with < 10 positive ratings or < 10 negative ratings so that the profiles are big and balanced enough for learning discriminative user models. This pruning results in 452 users, 1654 movies, and 61054 interactions in our dataset.
+
+A zip file containing all data can be downloaded [here](https://mega.nz/file/WFZXFCrR#TwuDerW7Gk5tyBzp4uM_YZzF3lRVsc8qblTA2vLhApg).
 
 ### NCF
 For NCF, the data is in ```NCF/data/movielens_train.tsv```. 
