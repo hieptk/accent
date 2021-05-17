@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 import helper
@@ -6,13 +5,18 @@ from dataset import Dataset
 
 
 def generate_cf(ks):
+	"""
+	generate counterfactual explanations for multiple k values
+	Args:
+		ks: values of k to consider
+
+	Returns:
+
+	"""
 	data = Dataset()
 	args = helper.parse_args()
 	model = helper.get_pretrained_RCF_model(data, args, path='pretrain-rcf')
 
-	np.random.seed(2512)
-	# n_samples = 100
-	# user_ids = np.random.choice(data.num_users, size=n_samples, replace=False)
 	user_ids = list(range(data.num_users))
 	n_samples = data.num_users
 

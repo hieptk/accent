@@ -11,6 +11,11 @@ from influence.NCF import NCF
 
 
 def parse_args():
+    """
+        parse all args from the console
+        Returns:
+            the parsed args
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--avextol', type=float, default=1e-3,
                         help='threshold for optimization in influence function')
@@ -43,6 +48,17 @@ def parse_args():
 
 
 def get_scores(user, k, model):
+    """
+    get scores for a user
+    Args:
+        user: user to score
+        k: number of top recommendations
+        model: recommender model
+
+    Returns:
+        a dictionary containing score of all items,
+        top k recommendations
+    """
     users = np.ones(model.num_items) * user
     items = np.arange(model.num_items, dtype=np.float32)
     x = np.vstack([users, items]).T
@@ -57,6 +73,14 @@ def get_scores(user, k, model):
 
 
 def get_model(use_recs=False):
+    """
+    get a new NCF model or load pretrained if exists
+    Args:
+        use_recs: if true, load top recommendations as the test set. See get_rec.py
+
+    Returns:
+        an NCF model
+    """
     args = parse_args()
     if args.dataset == 'movielens':
         batch_size = 1246

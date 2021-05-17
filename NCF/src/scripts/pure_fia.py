@@ -10,7 +10,22 @@ def try_remove(removed_item, cur_scores, influences):
     return repl, new_scores[0] - new_scores[repl], new_scores
 
 
-def find_counterfactual(cur_scores, recommended_item, topk, visited, influences, max_iter=int(1e9)):
+def find_counterfactual(cur_scores, recommended_item, topk, visited, influences):
+    """
+        given a user, find an explanation for that user using the "pure FIA" algorithm
+        Args:
+            cur_scores: current scores,
+            recommended_item: current recommendation,
+            topk: the original top k items,
+            visited: list of interacted items,
+            influences: list of influences of interactions on the recommendations
+
+        Returns: a tuple consisting of:
+                    - a set of items in the counterfactual explanation
+                    - the originally recommended item
+                    - a list of predicted scores after the removal of the counterfactual explanation
+                    - the predicted replacement item
+    """
     removed_items = set()
     cur_repl = -1
     cur_diff = cur_scores[0] - cur_scores[1]
@@ -34,6 +49,20 @@ def find_counterfactual(cur_scores, recommended_item, topk, visited, influences,
 
 
 def find_counterfactual_multiple_k(user, ks, model):
+    """
+        given a user, find an explanation for that user using the "pure FIA" algorithm
+        Args:
+            user: ID of user
+            ks: a list of values of k to consider
+            model: the recommender model, a Tensorflow Model object
+
+        Returns: a list explanations, each correspond to one value of k. Each explanation is a tuple consisting of:
+                    - a set of items in the counterfactual explanation
+                    - the originally recommended item
+                    - a list of items in the original top k
+                    - a list of predicted scores after the removal of the counterfactual explanation
+                    - the predicted replacement item
+        """
     begin = time()
     u_indices = np.where(model.data_sets.train.x[:, 0] == user)[0]
     visited = [int(model.data_sets.train.x[i, 1]) for i in u_indices]

@@ -5,6 +5,9 @@ import tensorflow.compat.v1 as tf
 
 
 def get_rec():
+    """
+    get recommendations for each user
+    """
     tf.reset_default_graph()
     model = get_model()
     k = 20

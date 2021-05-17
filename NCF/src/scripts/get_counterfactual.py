@@ -5,6 +5,15 @@ from helper import get_model
 
 
 def generate_cf(algo, ks):
+    """
+    generate counterfactual explanations for multiple k values
+    Args:
+        algo: algorithm used to generate explanations
+    	ks: values of k to consider
+
+    Returns:
+
+    """
     if algo == 'pure_fia':
         from pure_fia import find_counterfactual_multiple_k
     elif algo == 'fia':

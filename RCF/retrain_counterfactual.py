@@ -18,6 +18,12 @@ def counterfactual2path(user, counterfactual_set):
 
 
 def retrain(ks):
+	"""
+	retrain models without counterfactual sets for given values of k.
+	Trained models are saved to user's home directory
+	Args:
+		ks:	values of k to consider
+	"""
 	args = parse_args()
 	inputs = []
 	input_files = [f"{args.algo}_{k}.csv" for k in ks]

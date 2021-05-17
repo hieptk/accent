@@ -6,6 +6,18 @@ from Utilis import get_relational_data
 
 
 def get_item_weights(user_id, item_id, model, data, args):
+	"""
+	get attention weights of all interactions made by user
+	Args:
+		user_id: ID of user
+		item_id: ID of item whose score is being predicted
+		model: the recommender model
+		data: dataset used to trained model, see dataset.py
+		args: extra arguments for model
+
+	Returns:
+		list of actions made by user, sorted by decreasing attention weights
+	"""
 	first_att = model.get_attention_type_user(user_id)[0]
 
 	n_types = 4
@@ -30,6 +42,22 @@ def get_item_weights(user_id, item_id, model, data, args):
 
 
 def try_remove(user_id, item_id, removed_item_id, topk, model, data, args):
+	"""
+	try to remove some items and get the new scores while fixing all model parameters
+	Args:
+		user_id: ID of user
+		item_id: ID of item to get score
+		removed_item_id: a set of removed items
+		topk: the original top k items
+		model: the recommender model
+		data: the dataset used to train the model, see dataset.py
+		args: extra arguments for the model
+
+	Returns:
+		the new recommendation,
+		the score gap between the new recommendation and the top-2 item
+		the list of new scores of all items
+	"""
 	scores = model.get_scores_per_user(user_id, data, args, removed_item_id)
 	scores_dict = Counter({item: scores[item] for item in topk if item != item_id})
 	replacement, replacement_score = scores_dict.most_common(1)[0]
@@ -38,7 +66,6 @@ def try_remove(user_id, item_id, removed_item_id, topk, model, data, args):
 
 def init(user_id, k, model, data, args):
 	cur_scores = model.get_scores_per_user(user_id, data, args)
-	# delete visited scores
 	visited = set(data.user_positive_list[user_id])  # get positive list for the userID
 	_, topk = helper.get_topk(cur_scores, visited, k)
 	recommended_item = topk[0][0]
@@ -50,6 +77,22 @@ def init(user_id, k, model, data, args):
 
 
 def find_counterfactual(user_id, k, model, data, args):
+	"""
+		given a user, find an explanation for that user using the "attention" algorithm
+		Args:
+			user_id: ID of user
+			k: a single value of k to consider
+			model: the recommender model, a Tensorflow Model object
+			data: the dataset used to train the model, see dataset.py
+			args: other args used for model
+
+		Returns: a tuple consisting of:
+					- a set of items in the counterfactual explanation
+					- the originally recommended item
+					- a list of items in the original top k
+					- a list of predicted scores after the removal of the counterfactual explanation
+					- the predicted replacement item
+	"""
 	cur_scores, recommended_item, topk, item_weights, cur_diff = init(user_id, k, model, data, args)
 
 	removed_items = set()
@@ -71,6 +114,22 @@ def find_counterfactual(user_id, k, model, data, args):
 
 
 def find_counterfactual_multiple_k(user_id, ks, model, data, args):
+	"""
+	given a user, find an explanation for that user using the "attention" algorithm
+	Args:
+		user_id: ID of user
+		ks: a list of values of k to consider
+		model: the recommender model, a Tensorflow Model object
+		data: the dataset used to train the model, see dataset.py
+		args: other args used for model
+
+	Returns: a list explanations, each correspond to one value of k. Each explanation is a tuple consisting of:
+				- a set of items in the counterfactual explanation
+				- the originally recommended item
+				- a list of items in the original top k
+				- a list of predicted scores after the removal of the counterfactual explanation
+				- the predicted replacement item
+	"""
 	res = []
 	for k in ks:
 		begin = time()

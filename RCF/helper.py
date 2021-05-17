@@ -5,6 +5,11 @@ from tensorflow_addons.activations import gelu
 
 
 def parse_args():
+	"""
+	parse all args from the console
+	Returns:
+		the parsed args
+	"""
 	parser = argparse.ArgumentParser(description="Run MF for ML.")
 
 	parser.add_argument('--epoch', type=int, default=50, help='Number of epochs.')
@@ -42,6 +47,16 @@ def parse_args():
 
 
 def get_pretrained_RCF_model(data, args, path='pretrain-rcf'):
+	"""
+	load a pretrained RCF model from disk
+	Args:
+		data: the dataset used for training, see dataset.py
+		args: extra arguments for the model
+		path: the path that stores that pretrained model
+
+	Returns:
+		the model
+	"""
 	activation_function = gelu
 	save_file = '%s/%s_%d' % (path, 'ml1M', args.hidden_factor)
 	args.pretrain = 1  # must load pretrained
@@ -54,6 +69,16 @@ def get_pretrained_RCF_model(data, args, path='pretrain-rcf'):
 
 
 def get_new_RCF_model(data, args, save_file=None):
+	"""
+	get a new RCF model with all default params
+	Args:
+		data: the dataset used for training, see dataset.py
+		args: extra arguments for the model
+		save_file: the path to save the new model
+
+	Returns:
+		the model
+	"""
 	activation_function = gelu
 	if save_file is None:
 		save_file = 'pretrain-rcf/%s_%d' % ('ml1M', args.hidden_factor)
@@ -67,16 +92,18 @@ def get_new_RCF_model(data, args, save_file=None):
 	return model
 
 
-def get_top5(scores, visited, data, verbose=1):
-	scores = Counter({i: scores[i] for i in range(len(scores)) if i not in visited})
-	top5 = scores.most_common(5)
-	if verbose > 0:
-		print(f'top 5 items: {top5}')
-		print(f'top 5 movie: {[data.raw_item_id[i] for i, _ in top5]}')
-	return scores, top5
-
-
 def get_topk(scores: list, visited: set, k: int):
+	"""
+	given the scores, get top k recommendations
+	Args:
+		scores: list
+		visited: list of interacted items
+		k: number of items to return
+
+	Returns:
+		dict from item to score,
+		top k items
+	"""
 	scores = Counter({idx: val for idx,val in enumerate(scores) if idx not in visited})
 	topk = scores.most_common(k)
 	return scores, topk

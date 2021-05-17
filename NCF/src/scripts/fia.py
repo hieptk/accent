@@ -5,24 +5,51 @@ from helper import get_scores, get_model
 
 
 def try_remove(removed_item, cur_scores, influences):
+    """
+        predict new scores after removing some items using FIA
+        Args:
+            removed_item: the set of removed items
+            cur_scores: the current scores
+            influences: the influences of interactions on recommendations
+
+        Returns:
+            the new top recommendation,
+            the score gap between the top-1 and the top-2 recommendations,
+            the new scores
+        """
     new_scores = cur_scores - influences[:, removed_item]
     repl = np.argmax(new_scores[1:]) + 1
     return repl, new_scores[0] - new_scores[repl], new_scores
 
 
 def find_counterfactual(cur_scores, recommended_item, topk, visited, influences):
+    """
+        given a user, find an explanation for that user using FIA
+        Args:
+            cur_scores: current scores,
+            recommended_item: current recommendation,
+            topk: the original top k items,
+            visited: list of interacted items,
+            influences: list of influences of interactions on the recommendations
+
+        Returns: a tuple consisting of:
+                    - a set of items in the counterfactual explanation
+                    - the originally recommended item
+                    - a list of predicted scores after the removal of the counterfactual explanation
+                    - the predicted replacement item
+    """
     removed_items = set()
     cur_repl = -1
     cur_diff = cur_scores[0] - cur_scores[1]
 
-    items = np.argsort(-influences[0])
+    items = np.argsort(-influences[0])  # sort items based on the influence on the top recommendation
 
     for item in items:
         if item in removed_items:
             continue
         repl, new_diff, new_scores = try_remove(item, cur_scores, influences)
 
-        if new_diff < cur_diff:
+        if new_diff < cur_diff:  # if the score gap is reduced
             cur_repl, cur_diff, cur_scores = repl, new_diff, new_scores
             removed_items.add(item)
             if cur_diff < 0:
@@ -37,6 +64,20 @@ def find_counterfactual(cur_scores, recommended_item, topk, visited, influences)
 
 
 def find_counterfactual_multiple_k(user, ks, model):
+    """
+        given a user, find an explanation for that user using FIA
+        Args:
+            user: ID of user
+            ks: a list of values of k to consider
+            model: the recommender model, a Tensorflow Model object
+
+        Returns: a list explanations, each correspond to one value of k. Each explanation is a tuple consisting of:
+                    - a set of items in the counterfactual explanation
+                    - the originally recommended item
+                    - a list of items in the original top k
+                    - a list of predicted scores after the removal of the counterfactual explanation
+                    - the predicted replacement item
+        """
     begin = time()
     u_indices = np.where(model.data_sets.train.x[:, 0] == user)[0]
     visited = [int(model.data_sets.train.x[i, 1]) for i in u_indices]

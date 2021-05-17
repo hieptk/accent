@@ -5,6 +5,26 @@ from Utilis import get_share_attributes
 
 
 class Dataset:
+	"""
+		a dataset consists of:
+		- train_data: a pandas dataframe with all user-pos-neg triples
+		- test_data: similar to train_data
+		- rel_data: a pandas dataframe with relation data
+		- user_id: a map from raw user id to compressed user id
+		- raw_user_id: reverse map of user_id
+		- item_id: a map from raw item id to compressed item id
+		- raw_item_id: reverse map of item_id
+		- num_users: number of users
+		- num_items: number of items
+		- movie_dict: a dict from movie id to movie object
+		- all_genres: list of all genres
+		- all_directors: list of all directors
+		- all_actors: list of all actors
+		- num_genres: number of genres
+		- num_directors: number of directors
+		- num_actors: number of actors
+		- user_positive_list: a 2d array where user_positive_list[i] is the list of all pos items of user i
+	"""
 	def __init__(self, path='./ML100K/', ignored_user=-1, ignored_items=None):
 		self.train_data = pd.read_csv(path + 'train.csv')
 		self.test_data = pd.read_csv(path + 'test.csv')
@@ -37,6 +57,17 @@ class Dataset:
 
 	@staticmethod
 	def compress(series):
+		"""
+		given a list of some pandas series of integers, compress them to continous values.
+		Example: [[1, 10, 3], [7, 9]] => [[0, 4, 1], [2, 3]]
+		Args:
+			series: a list of pandas series of integers to be compressed
+
+		Returns: a list with two more elements than the input list:
+					- the map from raw numbers to compressed values
+					- the reverse map from compressed values to the raw values
+					- compressed series
+		"""
 		values = set()
 		for s in series:
 			values.update(s.unique())

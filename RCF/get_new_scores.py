@@ -11,9 +11,27 @@ from retrain_counterfactual import counterfactual2path
 
 
 def get_scores(idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, item2scores, home_dir):
+	"""
+	get scores of all items after retrained
+	Args:
+		idx: test number
+		user_id: ID of user
+		item_id: ID of item
+		topk: the top-k items
+		counterfactual: the counterfactual set
+		predicted_scores: the predicted scores
+		replacement: the replacement item
+		item2scores: a dict for caching
+		home_dir: the directory where trained models are stored
+
+	Returns:
+		a 2d array where each row is the scores of all items in one retrain.
+	"""
 	key = counterfactual2path(user_id, counterfactual)
-	if key in item2scores:
+	if key in item2scores:  # if cached
 		return item2scores[key]
+
+	# load model from disk
 	if not Path(f'{home_dir}/{key}/').exists():
 		print('missing', user_id, key)
 		return None
@@ -37,6 +55,21 @@ def get_scores(idx, user_id, item_id, topk, counterfactual, predicted_scores, re
 
 
 def get_topk_scores(idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, item2scores, home_dir):
+	"""
+	get the new scores of top-k items
+	Args:
+		idx: test number
+		user_id: ID of user
+		item_id: ID of item
+		topk: the top-k items
+		counterfactual: the counterfactual set
+		predicted_scores: the predicted scores
+		replacement: the replacement item
+		item2scores: a dict for caching
+		home_dir: the home directory, where trained models are stored
+
+	Returns: a 2d array where each row is the scores of top-k items in one retrain.
+	"""
 	scores = get_scores(idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, item2scores, home_dir)
 	if scores is None:
 		return None
@@ -49,6 +82,11 @@ def get_topk_scores(idx, user_id, item_id, topk, counterfactual, predicted_score
 
 
 def get_new_scores(ks):
+	"""
+	get new scores after retrained for the given values of k
+	Args:
+		ks: values of k to consider
+	"""
 	args = parse_args()
 	input_files = [f"{args.algo}_{k}.csv" for k in ks]
 

@@ -6,7 +6,18 @@ from dataset import Dataset
 from helper import parse_args, get_pretrained_RCF_model, get_topk
 
 
+
 def try_replace(repl, score_gap, gap_infl):
+	"""
+	given a replacement item, try to swap the replacement and the recommendation
+	Args:
+		repl: the replacement item
+		score_gap: the current score gap between repl and the recommendation
+		gap_infl: a list of items and their influence on the score gap
+
+	Returns: if possible, return the set of items that must be removed to swap and the new score gap
+			else, None, 1e9
+	"""
 	print(f'try replace', repl, score_gap)
 	sorted_infl = np.argsort(-gap_infl)
 
@@ -27,36 +38,23 @@ def try_replace(repl, score_gap, gap_infl):
 		return None, 1e9
 
 
-def find_counterfactual(user_id, k, model, data, args):
-	cur_scores = model.get_scores_per_user(user_id, data, args)
-	visited = data.user_positive_list[user_id]
-	_, topk = get_topk(cur_scores, set(visited), k)
-	recommended_item = topk[0][0]
-	influences = np.zeros((k, len(visited)))
-	for i in range(k):
-		influences[i] = model.get_influence3(user_id, topk[i][0], data, args)
-
-	res = None
-	best_repl = -1
-	best_i = -1
-	best_gap = 1e9
-	for i in range(1, k):
-		tmp_res, tmp_gap = try_replace(topk[i][0], topk[0][1] - topk[i][1], influences[0] - influences[i])
-		if tmp_res is not None and (res is None or len(tmp_res) < len(res) or (len(tmp_res) == len(res) and tmp_gap < best_gap)):
-			res, best_repl, best_i, best_gap = tmp_res, topk[i][0], i, tmp_gap
-
-	predicted_scores = np.array([cur_scores[item] for item, _ in topk])
-	for item in res:
-		predicted_scores -= influences[:, item]
-	assert predicted_scores[0] < predicted_scores[best_i]
-	assert abs(predicted_scores[0] - predicted_scores[best_i] - best_gap) < 1e-6
-
-	res = set(visited[idx] for idx in res)
-
-	return res, recommended_item, [item for item, _ in topk], list(predicted_scores), best_repl
-
-
 def find_counterfactual_multiple_k(user_id, ks, model, data, args):
+	"""
+	given a user, find an explanation for that user using ACCENT
+	Args:
+		user_id: ID of user
+		ks: a list of values of k to consider
+		model: the recommender model, a Tensorflow Model object
+		data: the dataset used to train the model, see dataset.py
+		args: other args used for model
+
+	Returns: a list explanations, each correspond to one value of k. Each explanation is a tuple consisting of:
+				- a set of items in the counterfactual explanation
+				- the originally recommended item
+				- a list of items in the original top k
+				- a list of predicted scores after the removal of the counterfactual explanation
+				- the predicted replacement item
+	"""
 	begin = time()
 	for i in range(len(ks) - 1):
 		assert ks[i] < ks[i + 1]
@@ -64,6 +62,8 @@ def find_counterfactual_multiple_k(user_id, ks, model, data, args):
 	visited = data.user_positive_list[user_id]
 	_, topk = get_topk(cur_scores, set(visited), ks[-1])
 	recommended_item = topk[0][0]
+
+	# init influence of actions on the top k items
 	influences = np.zeros((ks[-1], len(visited)))
 	for i in range(ks[-1]):
 		influences[i] = model.get_influence3(user_id, topk[i][0], data, args)
@@ -74,7 +74,8 @@ def find_counterfactual_multiple_k(user_id, ks, model, data, args):
 	best_gap = 1e9
 
 	ret = []
-	for i in range(1, ks[-1]):
+	for i in range(1, ks[-1]):  # for each item in the original top k
+		# try to replace rec with this item
 		tmp_res, tmp_gap = try_replace(topk[i][0], topk[0][1] - topk[i][1], influences[0] - influences[i])
 		if tmp_res is not None and (res is None or len(tmp_res) < len(res) or (len(tmp_res) == len(res) and tmp_gap < best_gap)):
 			res, best_repl, best_i, best_gap = tmp_res, topk[i][0], i, tmp_gap
@@ -99,7 +100,7 @@ def main():
 	model = get_pretrained_RCF_model(data, args, path='pretrain-rcf')
 
 	user_id = 0
-	find_counterfactual(user_id, 5, model, data, args)
+	find_counterfactual_multiple_k(user_id, [5, 10, 20], model, data, args)
 
 
 if __name__ == "__main__":

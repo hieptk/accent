@@ -6,6 +6,16 @@ from helper import get_scores, get_model
 
 
 def try_replace(repl, score_gap, gap_infl):
+    """
+    given a replacement item, try to swap the replacement and the recommendation
+    Args:
+        repl: the replacement item
+        score_gap: the current score gap between repl and the recommendation
+        gap_infl: a list of items and their influence on the score gap
+
+    Returns: if possible, return the set of items that must be removed to swap and the new score gap
+            else, None, 1e9
+    """
     print(f'try replace', repl, score_gap)
     sorted_infl = np.argsort(-gap_infl)
 
@@ -27,6 +37,20 @@ def try_replace(repl, score_gap, gap_infl):
 
 
 def find_counterfactual_multiple_k(user, ks, model):
+    """
+        given a user, find an explanation for that user using ACCENT
+        Args:
+            user: ID of user
+            ks: a list of values of k to consider
+            model: the recommender model, a Tensorflow Model object
+
+        Returns: a list explanations, each correspond to one value of k. Each explanation is a tuple consisting of:
+                    - a set of items in the counterfactual explanation
+                    - the originally recommended item
+                    - a list of items in the original top k
+                    - a list of predicted scores after the removal of the counterfactual explanation
+                    - the predicted replacement item
+    """
     begin = time()
     u_indices = np.where(model.data_sets.train.x[:, 0] == user)[0]
     visited = [int(model.data_sets.train.x[i, 1]) for i in u_indices]
