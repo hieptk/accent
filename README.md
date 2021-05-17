@@ -64,14 +64,14 @@ For RCF, metadata (genres, directors, actors) of movies and item-item relations 
 
 ## Training Models
 ### NCF
-Similar to RCF, an NCF model can be trained by running:
+From the unzipped folder, run the following comands to start training an NCF model.
 ```bash
 cd NCF/src/scripts
 python3 train.py
 ```
 
 ### RCF
-From the unzipped folder, run the following comands to start training an RCF model.
+Similarly, an RCF model can be trained by running:
 ```bash
 cd RCF
 python3 train.py --pretrain -1
