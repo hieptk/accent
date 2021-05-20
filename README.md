@@ -1,4 +1,5 @@
 
+
 # Counterfactual Explanations for Neural Recommenders
 This repository contains data and the implementation of the ACCENT framework for two neural recommenders: Neural Collaborative Filtering (NCF) and Relational Collaborative Filtering (RCF).
 Details of ACCENT can be found here: https://arxiv.org/abs/2105.05008.
@@ -34,6 +35,19 @@ pip3 install -r requirements.txt
 We use the popular MovieLens 100K dataset (https://grouplens.org/datasets/movielens/100k/), which contains 100K ratings on a 1 − 5 scale by 943 users on 1682 movies. To conform to the implicit feedback setting in RCF, we binarized ratings to a positive label if it is 3 or above, and a negative label otherwise. We removed all users with < 10 positive ratings or < 10 negative ratings so that the profiles are big and balanced enough for learning discriminative user models. This pruning results in 452 users, 1654 movies, and 61054 interactions in our dataset.
 
 A zip file containing all data can be downloaded [here](https://mega.nz/file/WFZXFCrR#TwuDerW7Gk5tyBzp4uM_YZzF3lRVsc8qblTA2vLhApg).
+
+Alternatively, to preprocess data from the original MovieLens dataset, follow these steps:
+1. Download and unzip the original dataset [here](https://files.grouplens.org/datasets/movielens/ml-100k.zip).
+2. Copy file ```u.data``` to ```RCF/ML100K```.
+3. Run script to preprocess data
+```bash
+cd RCF
+python3 generate_data.py
+```
+3. New data is written to ```ML100K/train.csv``` and ```ML100K/test.csv```. Now copy data for NCF to the right directory:
+```bash
+cp movielens_train.tsv ../NCF/data
+```
 
 ### NCF
 For NCF, the data is in ```NCF/data/movielens_train.tsv```. 
