@@ -44,7 +44,7 @@ Alternatively, to preprocess data from the original MovieLens dataset, follow th
 cd RCF
 python3 generate_data.py
 ```
-3. New data is written to ```ML100K/train.csv``` and ```ML100K/test.csv```. Now copy data for NCF to the right directory:
+3. New data is written to ```ML100K/train.csv``` , ```ML100K/test.csv```, and ```movielens_train.tsv```. Now copy data for NCF to the right directory:
 ```bash
 cp movielens_train.tsv ../NCF/data
 ```
@@ -123,3 +123,21 @@ A result file has 452 rows (excluding the header), one for each user. Each row h
 - ```actual_scores_avg```: the average scores of 5 retrains.
 
 The precomputed result files are uploaded [here](https://mega.nz/file/rQ5WkIwB#E8wp5DVbzAeJS-OF_tW_aLIIXfWjVO4rNKgJQ_j4fSo).
+
+## Significance Testing
+To perform significance testing between any pair of algorithms, follow these steps:
+1. Copy result files produced in the previous steps to the base directory.
+2. Run the script:
+```bash
+python3 compare --file {FILE1} --file2 {FILE2}
+```
+where FILE1 and FILE2 are the result files of algorithms that you want to compare. For example:
+```bash
+python3 compare.py --file fia_5.csv --file2 accent_5.csv
+```
+The script will print the following information:
+- The counterfactual percentage of each algorithm
+- A contingency table comparing two algorithms
+- The p-value of the McNemar's test comparing the counterfactual effect
+- The average counterfactual explanation size of each algorithm
+- The p-value of the t-test comparing these sizes.
