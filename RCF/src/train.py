@@ -1,8 +1,8 @@
 from time import time
 
-from dataset import Dataset
-from helper import parse_args, get_new_RCF_model
-from test_rcf import main
+from RCF.src.dataset import Dataset
+from RCF.src.helper import parse_args, get_new_RCF_model
+from RCF.src.test_rcf import main
 
 if __name__ == '__main__':
     # Data loading

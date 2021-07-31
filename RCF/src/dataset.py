@@ -1,7 +1,8 @@
 import pandas as pd
 
-from moive_loader import movie_loader
-from Utilis import get_share_attributes
+from .moive_loader import movie_loader
+from .Utilis import get_share_attributes
+import os
 
 
 class Dataset:
@@ -25,7 +26,8 @@ class Dataset:
 		- num_actors: number of actors
 		- user_positive_list: a 2d array where user_positive_list[i] is the list of all pos items of user i
 	"""
-	def __init__(self, path='./ML100K/', ignored_user=-1, ignored_items=None):
+	def __init__(self, ignored_user=-1, ignored_items=None):
+		path = os.path.join(os.path.dirname(__file__), '../data/')
 		self.train_data = pd.read_csv(path + 'train.csv')
 		self.test_data = pd.read_csv(path + 'test.csv')
 		self.rel_data = pd.read_csv(path + 'relational_data.csv')

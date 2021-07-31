@@ -5,8 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from dataset import Dataset
-from helper import parse_args, get_pretrained_RCF_model
+from RCF.src.dataset import Dataset
+from RCF.src.helper import parse_args, get_pretrained_RCF_model
 from retrain_counterfactual import counterfactual2path
 
 

@@ -1,4 +1,5 @@
 import argparse
+import os
 
 class movie:
     def __init__(self, genre, director, actor):
@@ -16,7 +17,8 @@ class movie_loader:
     def load_movie(self, compressed_id):  # map the feature entries in all files, kept in self.features dictionary
         parser = argparse.ArgumentParser(description=''' load movie data''')
 
-        parser.add_argument('--movie_data_file', type=str, default='./ML100K/auxiliary-mapping.txt')
+        path = os.path.dirname(__file__)
+        parser.add_argument('--movie_data_file', type=str, default=os.path.join(path, '../data/auxiliary-mapping.txt'))
 
         parsed_args, _ = parser.parse_known_args()
 
@@ -51,7 +53,8 @@ class movie_loader:
     def load_attribute(self):  # map the feature entries in all files, kept in self.features dictionary
         parser = argparse.ArgumentParser(description=''' load movie data''')
 
-        parser.add_argument('--movie_data_file', type=str, default='./ML100K/auxiliary-mapping.txt')
+        path = os.path.dirname(__file__)
+        parser.add_argument('--movie_data_file', type=str, default=os.path.join(path, '../data/auxiliary-mapping.txt'))
 
         parsed_args, _ = parser.parse_known_args()
 

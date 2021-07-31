@@ -1,18 +1,16 @@
-import numpy as np
 import pandas as pd
 
-from Utilis import get_share_attributes, get_relational_data
-from dataset import Dataset
-from moive_loader import movie_loader
+from .Utilis import get_share_attributes
+from .moive_loader import movie_loader
 
 
 def generate_interaction_data():
 	"""
 	generate interaction data for RCF
 	Returns:
-		write generated data to ML100K/train.csv and ML100K/test.csv
+		write generated data to data/train.csv and data/test.csv
 	"""
-	data = pd.read_table('ML100K/u.data', names=['user', 'item', 'rating', 'timestamp'])
+	data = pd.read_table('../data/u.data', names=['user', 'item', 'rating', 'timestamp'])
 	loader = movie_loader()
 	train_data = {'user': [], 'pos_item': [], 'neg_item': []}
 	test_data = {'user': [], 'pos_item': [], 'neg_item': []}
@@ -56,8 +54,8 @@ def generate_interaction_data():
 					test_data['neg_item'].append(neg_items[-j - 1])
 	train_data = pd.DataFrame(train_data)
 	test_data = pd.DataFrame(test_data)
-	train_data.to_csv('ML100K/train.csv', index=False)
-	test_data.to_csv('ML100K/test.csv', index=False)
+	train_data.to_csv('data/train.csv', index=False)
+	test_data.to_csv('data/test.csv', index=False)
 
 
 def compress(series):
@@ -79,7 +77,7 @@ def generate_interaction_data_ncf():
 	Returns:
 		write generated data to movielens_train.tsv
 	"""
-	data = pd.read_table('ML100K/u.data', names=['user', 'item', 'rating', 'timestamp'])
+	data = pd.read_table('../data/u.data', names=['user', 'item', 'rating', 'timestamp'])
 	loader = movie_loader()
 	train_data = []
 	for user in data['user'].unique():

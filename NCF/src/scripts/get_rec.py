@@ -1,7 +1,7 @@
 import pandas as pd
+import tensorflow.compat.v1 as tf
 
 from helper import get_model, get_scores
-import tensorflow.compat.v1 as tf
 
 
 def get_rec():

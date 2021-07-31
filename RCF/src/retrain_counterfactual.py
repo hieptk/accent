@@ -6,8 +6,8 @@ from time import time
 import numpy as np
 import pandas as pd
 
-from dataset import Dataset
-from helper import parse_args, get_new_RCF_model
+from RCF.src.dataset import Dataset
+from RCF.src.helper import parse_args, get_new_RCF_model
 
 
 def counterfactual2path(user, counterfactual_set):
