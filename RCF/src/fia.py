@@ -1,6 +1,6 @@
 import numpy as np
 
-from pure_fia import PureFIA
+from RCF.src.pure_fia import PureFIA
 
 
 class FIA(PureFIA):
@@ -30,7 +30,7 @@ class FIA(PureFIA):
         for item in items:
             if item in removed_items:
                 continue
-            repl, new_diff, new_scores = super().try_remove(item, cur_scores, influences)
+            repl, new_diff, new_scores = FIA.try_remove(item, cur_scores, influences)
 
             if new_diff < cur_diff:  # if the score gap is reduced
                 cur_repl, cur_diff, cur_scores = repl, new_diff, new_scores

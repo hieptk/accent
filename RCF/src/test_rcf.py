@@ -1,5 +1,7 @@
+import os
+
 import RCF.src.helper as helper
-from .dataset import Dataset
+from RCF.src.dataset import Dataset
 
 
 def main():
@@ -8,7 +10,7 @@ def main():
 	"""
 	data = Dataset()
 	args = helper.parse_args()
-	model = helper.get_pretrained_RCF_model(data, args, path='../pretrain-rcf')
+	model = helper.get_pretrained_RCF_model(data, args, path=os.path.join(os.path.dirname(__file__), 'pretrain-rcf'))
 
 	correct = 0
 	for user in range(data.num_users):

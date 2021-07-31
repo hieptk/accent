@@ -1,14 +1,15 @@
+import os
+
 import pandas as pd
 
 from RCF.src import helper
-from RCF.src.dataset import Dataset
-from RCF.src.pure_attention import PureAttention
-from RCF.src.attention import Attention
-from RCF.src.pure_fia import PureFIA
-from RCF.src.fia import FIA
 from RCF.src.accent import Accent
-import os
-from commons.generate_counterfactual import append_result, init_all_results
+from RCF.src.attention import Attention
+from RCF.src.dataset import Dataset
+from RCF.src.fia import FIA
+from RCF.src.pure_attention import PureAttention
+from RCF.src.pure_fia import PureFIA
+from commons.helper import append_result, init_all_results
 
 
 def generate_cf(ks):
@@ -22,7 +23,7 @@ def generate_cf(ks):
 	"""
 	data = Dataset()
 	args = helper.parse_args()
-	model = helper.get_pretrained_RCF_model(data, args, path=os.path.join(os.path.dirname(__file__), 'RCF/src/pretrain-rcf'))
+	model = helper.get_pretrained_RCF_model(data, args, path=os.path.join(os.path.dirname(__file__), 'pretrain-rcf'))
 
 	user_ids = list(range(data.num_users))
 	n_samples = data.num_users

@@ -1,5 +1,3 @@
-import hashlib
-from ast import literal_eval
 from pathlib import Path
 from time import time
 
@@ -7,14 +5,8 @@ import numpy as np
 import pandas as pd
 import tensorflow.compat.v1 as tf
 
-from helper import get_model, parse_args
-
-
-def counterfactual2path(user, counterfactual_set):
-    res = f'{user}-{"-".join(str(x) for x in sorted(counterfactual_set))}'
-    if len(res) < 255:
-        return res
-    return hashlib.sha224(res.encode()).hexdigest()
+from NCF.src.scripts.helper import get_model, parse_args
+from commons.helper import read_row_from_result_file, prepare_path
 
 
 def retrain(algo, ks):
@@ -32,7 +24,7 @@ def retrain(algo, ks):
     inputs = pd.concat(inputs, ignore_index=True)
     print(inputs)
 
-    home_dir = str(Path.home()) + '/pretrain-ncf-amazon'
+    home_dir = str(Path.home()) + '/pretrain-ncf'
     args = parse_args()
     np.random.seed(1802)
 
@@ -40,26 +32,17 @@ def retrain(algo, ks):
     model = get_model(use_recs=True)
 
     for row in inputs.itertuples():
-        idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement = row[:7]
-        if not isinstance(counterfactual, str):
-            print('skip', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement)
+        idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement = read_row_from_result_file(row)
+        if counterfactual is None:
             continue
-        topk = literal_eval(topk)
-        counterfactual = literal_eval(counterfactual)
-        if isinstance(predicted_scores, str):
-            predicted_scores = literal_eval(predicted_scores)
-        else:
-            predicted_scores = None
-        print('begin idx', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement)
 
         keep = [i for i in range(model.data_sets.train.x.shape[0]) if int(model.data_sets.train.x[i, 0]) != user_id or
                 int(model.data_sets.train.x[i, 1]) not in counterfactual]
         for i in range(5):
-            path = f'{home_dir}/{counterfactual2path(user_id, counterfactual)}/{i}/'
-            if Path(path).exists():
-                print('already done', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, i)
+            path = prepare_path(home_dir, user_id, counterfactual, i)
+            if path is None:
+                print('already done', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, i, seed)
                 continue
-
             Path(path).mkdir(parents=True, exist_ok=True)
             tf.reset_default_graph()
             model = get_model(use_recs=True)

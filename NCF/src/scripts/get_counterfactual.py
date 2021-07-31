@@ -1,7 +1,11 @@
 import pandas as pd
 import tensorflow.compat.v1 as tf
 
-from helper import get_model
+from NCF.src.scripts.accent import Accent
+from NCF.src.scripts.fia import FIA
+from NCF.src.scripts.helper import get_model
+from NCF.src.scripts.pure_fia import PureFIA
+from commons.helper import init_all_results, append_result
 
 
 def generate_cf(algo, ks):
@@ -15,52 +19,25 @@ def generate_cf(algo, ks):
 
     """
     if algo == 'pure_fia':
-        from pure_fia import find_counterfactual_multiple_k
+        explaner = PureFIA()
     elif algo == 'fia':
-        from fia import find_counterfactual_multiple_k
+        explaner = FIA()
     else:
-        from accent import find_counterfactual_multiple_k
+        explaner = Accent()
 
     for i in range(len(ks) - 1):
         assert ks[i] < ks[i + 1]
     assert ks[-1] == 20
 
-    all_results = []
-    for _ in ks:
-        all_results.append(
-            {
-                'user': [],
-                'item': [],
-                'topk': [],
-                'counterfactual': [],
-                'predicted_scores': [],
-                'replacement': []
-            }
-        )
+    all_results = init_all_results(ks)
 
     model = get_model(use_recs=True)
     for user_id in range(model.num_users):
         print('testing user', user_id)
         tf.reset_default_graph()
         model = get_model(use_recs=True)
-        res = find_counterfactual_multiple_k(user_id, ks, model)
-
-        for j in range(len(ks)):
-            all_results[j]['user'].append(user_id)
-            counterfactual, rec, topk, predicted_scores, repl = res[j]
-            all_results[j]['item'].append(rec)
-            all_results[j]['topk'].append(topk)
-            all_results[j]['counterfactual'].append(counterfactual)
-            all_results[j]['predicted_scores'].append(predicted_scores)
-            all_results[j]['replacement'].append(repl)
-
-            print('k =', ks[j])
-            if not counterfactual:
-                print(f"Can't find counterfactual set for user {user_id}")
-            else:
-                print(f"Found a set of size {len(counterfactual)}: {counterfactual}")
-                print("Old top k: ", topk)
-                print("Replacement: ", repl, predicted_scores)
+        res = explaner.find_counterfactual_multiple_k(user_id, ks, model, None, None)
+        append_result(ks, all_results, user_id, res)
 
     for j in range(len(ks)):
         df = pd.DataFrame(all_results[j])

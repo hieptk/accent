@@ -1,7 +1,8 @@
-from generate_counterfactual import generate_cf
-from retrain_counterfactual import retrain
+from RCF.src.generate_counterfactual import generate_cf
+from RCF.src.helper import parse_args
+from commons.helper import evaluate_files
 from get_new_scores import get_new_scores
-from evaluate_counterfactual import evaluate
+from retrain_counterfactual import retrain
 
 
 def main():
@@ -12,7 +13,7 @@ def main():
     generate_cf(ks)
     retrain(ks)
     get_new_scores(ks)
-    evaluate(ks)
+    evaluate_files(parse_args, ks)
 
 
 if __name__ == "__main__":

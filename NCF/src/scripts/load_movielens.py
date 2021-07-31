@@ -1,11 +1,8 @@
-import sys
-
 import numpy as np
-
-sys.path.append("..")
-from influence.dataset import DataSet
-from influence.datasets import Datasets
 import pandas as pd
+
+from NCF.src.influence.dataset import DataSet
+from NCF.src.influence.datasets import Datasets
 
 
 def load_movielens(train_dir, batch, use_recs=False):

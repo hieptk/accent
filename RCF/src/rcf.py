@@ -12,7 +12,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from tensorflow.python.ops.parallel_for.gradients import jacobian
 from tensorflow_addons.activations import gelu
 
-from .Utilis import get_relational_data
+from RCF.src.Utilis import get_relational_data
 
 tf.disable_v2_behavior()
 os.environ['TF_DETERMINISTIC_OPS'] = '1'

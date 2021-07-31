@@ -1,9 +1,11 @@
-from time import time
-from explanation_algo import ExplanationAlgorithm
 from collections import Counter
+from time import time
+
+from RCF.src.helper import init_explanation
+from commons.explanation_algorithm_template import ExplanationAlgorithmTemplate
 
 
-class PureAttention(ExplanationAlgorithm):
+class PureAttention(ExplanationAlgorithmTemplate):
     @staticmethod
     def try_remove(user_id, item_id, removed_item_id, topk, model, data, args):
         """
@@ -45,8 +47,7 @@ class PureAttention(ExplanationAlgorithm):
             - a list of predicted scores after the removal of the counterfactual explanation
             - the predicted replacement item
         """
-        cur_scores, recommended_item, topk, item_weights, cur_diff = ExplanationAlgorithm.init(user_id, k, model, data,
-                                                                                               args)
+        cur_scores, recommended_item, topk, item_weights, cur_diff = init_explanation(user_id, k, model, data, args)
 
         removed_items = set()
         best_replacement = -1
@@ -62,8 +63,8 @@ class PureAttention(ExplanationAlgorithm):
         else:
             return None, recommended_item, topk, None, -1
 
-    @staticmethod
-    def find_counterfactual_multiple_k(user_id, ks, model, data, args):
+    @classmethod
+    def find_counterfactual_multiple_k(cls, user_id, ks, model, data, args):
         """
         given a user, find an explanation for that user using the "pure attention" algorithm
         Args:
@@ -83,8 +84,7 @@ class PureAttention(ExplanationAlgorithm):
         res = []
         for k in ks:
             begin = time()
-            counterfactual, rec, topk, predicted_scores, repl = PureAttention.find_counterfactual(user_id, k, model,
-                                                                                                  data, args)
+            counterfactual, rec, topk, predicted_scores, repl = cls.find_counterfactual(user_id, k, model, data, args)
             print('counterfactual time k =', k, time() - begin)
             res.append((counterfactual, rec, topk, predicted_scores, repl))
         return res

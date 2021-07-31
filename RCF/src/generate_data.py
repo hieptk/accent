@@ -1,16 +1,19 @@
+import os
+
 import pandas as pd
 
-from .Utilis import get_share_attributes
-from .moive_loader import movie_loader
+from RCF.src.Utilis import get_share_attributes
+from RCF.src.moive_loader import movie_loader
 
 
 def generate_interaction_data():
 	"""
 	generate interaction data for RCF
 	Returns:
-		write generated data to data/train.csv and data/test.csv
+		write generated data to RCF/data/train.csv and RCF/data/test.csv
 	"""
-	data = pd.read_table('../data/u.data', names=['user', 'item', 'rating', 'timestamp'])
+	path = os.path.join(os.path.dirname(__file__), '../data/')
+	data = pd.read_table(os.path.join(path, 'u.data'), names=['user', 'item', 'rating', 'timestamp'])
 	loader = movie_loader()
 	train_data = {'user': [], 'pos_item': [], 'neg_item': []}
 	test_data = {'user': [], 'pos_item': [], 'neg_item': []}
@@ -54,8 +57,8 @@ def generate_interaction_data():
 					test_data['neg_item'].append(neg_items[-j - 1])
 	train_data = pd.DataFrame(train_data)
 	test_data = pd.DataFrame(test_data)
-	train_data.to_csv('data/train.csv', index=False)
-	test_data.to_csv('data/test.csv', index=False)
+	train_data.to_csv(os.path.join(path, 'train.csv'), index=False)
+	test_data.to_csv(os.path.join(path, 'test.csv'), index=False)
 
 
 def compress(series):

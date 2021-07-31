@@ -14,8 +14,8 @@ tf.disable_v2_behavior()
 import math
 from scipy.optimize import fmin_ncg
 
-from influence.genericNeuralNet import GenericNeuralNet, variable, variable_with_weight_decay
-from influence.dataset import DataSet
+from NCF.src.influence.genericNeuralNet import GenericNeuralNet, variable, variable_with_weight_decay
+from NCF.src.influence.dataset import DataSet
 from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import math_ops
 

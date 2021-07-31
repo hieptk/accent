@@ -1,5 +1,3 @@
-import hashlib
-from ast import literal_eval
 from pathlib import Path
 from time import time
 
@@ -8,13 +6,7 @@ import pandas as pd
 
 from RCF.src.dataset import Dataset
 from RCF.src.helper import parse_args, get_new_RCF_model
-
-
-def counterfactual2path(user, counterfactual_set):
-	res = f'{user}-{"-".join(str(x) for x in sorted(counterfactual_set))}'
-	if len(res) < 255:
-		return res
-	return hashlib.sha224(res.encode()).hexdigest()
+from commons.helper import read_row_from_result_file, prepare_path
 
 
 def retrain(ks):
@@ -38,29 +30,16 @@ def retrain(ks):
 	seeds[0] = 2512
 
 	for row in inputs.itertuples():
-		idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement = row[:7]
-		if not isinstance(counterfactual, str):
-			print('skip', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement)
+		idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement = read_row_from_result_file(row)
+		if counterfactual is None:
 			continue
-		topk = literal_eval(topk)
-		counterfactual = literal_eval(counterfactual)
-		if isinstance(predicted_scores, str):
-			predicted_scores = literal_eval(predicted_scores)
-		else:
-			predicted_scores = None
-		print('begin idx', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement)
 
 		data = Dataset(ignored_user=user_id, ignored_items=counterfactual)
 		args = parse_args()
 		args.pretrain = -1
 
 		for i, seed in enumerate(seeds):
-			path = f'{home_dir}/{counterfactual2path(user_id, counterfactual)}/{seed}/'
-			if Path(path).exists():
-				print('already done', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, i, seed)
-				continue
-
-			Path(path).mkdir(parents=True, exist_ok=True)
+			path = prepare_path(home_dir, user_id, counterfactual, seed)
 			model = get_new_RCF_model(data, args, save_file=path + f'ml1M_{args.hidden_factor}')
 			print('begin retraining', idx, user_id, item_id, topk, counterfactual, predicted_scores, replacement, i, seed)
 			begin = time()

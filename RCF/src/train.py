@@ -1,3 +1,4 @@
+import os
 from time import time
 
 from RCF.src.dataset import Dataset
@@ -7,11 +8,13 @@ from RCF.src.test_rcf import main
 if __name__ == '__main__':
     # Data loading
     args = parse_args()
+    args.pretrain = -1
     data = Dataset()
 
-    save_file = 'pretrain-rcf/%s_%d' % ('ml1M', args.hidden_factor)
+    path = os.path.dirname(__file__)
+    save_file = os.path.join(path, 'pretrain-rcf/%s_%d' % ('ml1M', args.hidden_factor))
     # Training
-    model = get_new_RCF_model(data, args)
+    model = get_new_RCF_model(data, args, save_file)
 
     begin = time()
     print("begin train {}".format(begin))

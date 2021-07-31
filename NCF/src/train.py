@@ -1,5 +1,5 @@
-from get_rec import get_rec
-from helper import get_model
+from NCF.src.scripts.get_rec import get_rec
+from NCF.src.scripts.helper import get_model
 
 
 def main():

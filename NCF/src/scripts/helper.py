@@ -1,13 +1,11 @@
 import argparse
 import os
-import sys
 from collections import Counter
 
 import numpy as np
 
-sys.path.append("..")
-from scripts.load_movielens import load_movielens
-from influence.NCF import NCF
+from NCF.src.influence.NCF import NCF
+from NCF.src.scripts.load_movielens import load_movielens
 
 
 def parse_args():
@@ -84,7 +82,8 @@ def get_model(use_recs=False):
     args = parse_args()
     if args.dataset == 'movielens':
         batch_size = 1246
-        data_sets = load_movielens('../../data', batch=batch_size, use_recs=use_recs)
+        path = os.path.join(os.path.dirname(__file__), '../../data')
+        data_sets = load_movielens(path, batch=batch_size, use_recs=use_recs)
     else:
         raise NotImplementedError
 

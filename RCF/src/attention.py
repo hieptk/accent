@@ -1,4 +1,5 @@
-from pure_attention import PureAttention
+from RCF.src.helper import init_explanation
+from RCF.src.pure_attention import PureAttention
 
 
 class Attention(PureAttention):
@@ -20,13 +21,13 @@ class Attention(PureAttention):
             - a list of predicted scores after the removal of the counterfactual explanation
             - the predicted replacement item
         """
-        cur_scores, recommended_item, topk, item_weights, cur_diff = super().init(user_id, k, model, data, args)
+        cur_scores, recommended_item, topk, item_weights, cur_diff = init_explanation(user_id, k, model, data, args)
 
         removed_items = set()
         best_replacement = -1
         for item, _ in item_weights:
             removed_items.add(item)
-            replacement, new_diff, new_scores = super().try_remove(user_id, recommended_item, removed_items, topk,
+            replacement, new_diff, new_scores = Attention.try_remove(user_id, recommended_item, removed_items, topk,
                                                                    model, data, args)
             if new_diff < cur_diff:
                 best_replacement, cur_diff, cur_scores = replacement, new_diff, new_scores

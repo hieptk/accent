@@ -2,44 +2,13 @@ from time import time
 
 import numpy as np
 
-from explanation_algo import ExplanationAlgorithm
 from RCF.src.helper import get_topk
+from commons.accent_template import AccentTemplate
 
 
-class Accent(ExplanationAlgorithm):
-    @staticmethod
-    def try_replace(repl, score_gap, gap_infl):
-        """
-        given a replacement item, try to swap the replacement and the recommendation
-        Args:
-            repl: the replacement item
-            score_gap: the current score gap between repl and the recommendation
-            gap_infl: a list of items and their influence on the score gap
-
-        Returns: if possible, return the set of items that must be removed to swap and the new score gap
-                else, None, 1e9
-        """
-        print(f'try replace', repl, score_gap)
-        sorted_infl = np.argsort(-gap_infl)
-
-        removed_items = set()
-
-        for idx in sorted_infl:
-            if gap_infl[idx] < 0:  # cannot reduce the gap any more
-                break
-            removed_items.add(idx)
-            score_gap -= gap_infl[idx]
-            if score_gap < 0:  # the replacement passed the predicted
-                break
-        if score_gap < 0:
-            print(f'replace {repl}: {removed_items}')
-            return removed_items, score_gap
-        else:
-            print(f'cannot replace {repl}')
-            return None, 1e9
-
-    @staticmethod
-    def find_counterfactual_multiple_k(user_id, ks, model, data, args):
+class Accent(AccentTemplate):
+    @classmethod
+    def find_counterfactual_multiple_k(cls, user_id, ks, model, data, args):
         """
         given a user, find an explanation for that user using ACCENT
         Args:

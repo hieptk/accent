@@ -1,8 +1,9 @@
+import os
+
 import pandas as pd
 
-from .moive_loader import movie_loader
-from .Utilis import get_share_attributes
-import os
+from RCF.src.Utilis import get_share_attributes
+from RCF.src.moive_loader import movie_loader
 
 
 class Dataset:

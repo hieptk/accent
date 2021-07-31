@@ -15,9 +15,9 @@ tf.disable_v2_behavior()
 from tensorflow.python.ops import array_ops
 # from keras import backend as K
 
-from influence.hessians import hessian_vector_product
-from influence.dataset import DataSet
-from influence.datasets import Datasets
+from NCF.src.influence.hessians import hessian_vector_product
+from NCF.src.influence.dataset import DataSet
+from NCF.src.influence.datasets import Datasets
 
 
 def variable(name, shape, initializer):

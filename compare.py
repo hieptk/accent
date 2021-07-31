@@ -1,9 +1,10 @@
-import pandas as pd
-import numpy as np
-from ast import literal_eval
-from statsmodels.stats.contingency_tables import mcnemar
-from scipy.stats import ttest_rel
 import argparse
+from ast import literal_eval
+
+import numpy as np
+import pandas as pd
+from scipy.stats import ttest_rel
+from statsmodels.stats.contingency_tables import mcnemar
 
 
 def get_success(file):
