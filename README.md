@@ -10,6 +10,11 @@ Details of ACCENT can be found here: https://dl.acm.org/doi/10.1145/3404835.3463
 
 All results in the paper were produced using the code at tag v1.0.
 
+There are 2 subdirectories ```NCF``` and ```RCF``` which correspond to two recommender models exprimented in the paper.
+Each subdirectory contains a ```data``` folder with the necessary data for the model and a ```src``` folder with the source code.
+```NCF``` is further divided into 2 subfolders: ```influence``` contains all source code related to the implementation of influence functions,
+and ```scripts``` contains the implementation of NCF and explanation algorithms.
+
 ## Environment
 To use this code, the following software are required:
 - Python 3.7
