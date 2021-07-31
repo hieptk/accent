@@ -2,7 +2,7 @@
 
 # Counterfactual Explanations for Neural Recommenders
 This repository contains data and the implementation of the ACCENT framework for two neural recommenders: Neural Collaborative Filtering (NCF) and Relational Collaborative Filtering (RCF).
-Details of ACCENT can be found here: https://arxiv.org/abs/2105.05008.
+Details of ACCENT can be found here: https://dl.acm.org/doi/10.1145/3404835.3463005.
 
 <p align='center'>
 	<img src="https://github.com/hieptk/accent/raw/main/accent.png" width=800>
@@ -123,6 +123,13 @@ A result file has 452 rows (excluding the header), one for each user. Each row h
 - ```actual_scores_avg```: the average scores of 5 retrains.
 
 The precomputed result files are uploaded [here](https://mega.nz/file/rQ5WkIwB#E8wp5DVbzAeJS-OF_tW_aLIIXfWjVO4rNKgJQ_j4fSo).
+
+## Reproducing Table 1
+To get the counterfactual percentage and average set size as presented in Table 1, run:
+```bash
+python3 compare.py --file {FILE}
+```
+where FILE is the result file of the algorithm that you want to evaluate.
 
 ## Significance Testing
 To perform significance testing between any pair of algorithms, follow these steps:

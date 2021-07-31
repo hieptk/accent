@@ -39,6 +39,14 @@ def get_size(file, mask):
     return res
 
 
+def print_result(file):
+    res = get_success(file)
+    print(f'{file}: {np.mean(res)}')
+
+    algo_size = get_size(file, res)
+    print(f'{file} size: {np.mean(algo_size)}')
+
+
 def compare_algo(file, file2):
     cont_table = np.zeros((2, 2))
     res = get_success(file)
@@ -63,4 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("--file")
     parser.add_argument("--file2")
     args = parser.parse_args()
-    compare_algo(args.file, args.file2)
+    if args.file2 is None:
+        print_result(args.file)
+    else:
+        compare_algo(args.file, args.file2)
