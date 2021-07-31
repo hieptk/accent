@@ -1,10 +1,10 @@
 import pandas as pd
 import tensorflow.compat.v1 as tf
 
-from NCF.src.scripts.accent import Accent
-from NCF.src.scripts.fia import FIA
-from NCF.src.scripts.helper import get_model
-from NCF.src.scripts.pure_fia import PureFIA
+from NCF.src.accent import Accent
+from NCF.src.fia import FIA
+from NCF.src.helper import get_model
+from NCF.src.pure_fia import PureFIA
 from commons.helper import init_all_results, append_result
 
 

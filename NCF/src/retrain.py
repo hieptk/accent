@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import tensorflow.compat.v1 as tf
 
-from NCF.src.scripts.helper import get_model, parse_args
+from NCF.src.helper import get_model, parse_args
 from commons.helper import read_row_from_result_file, prepare_path
 
 

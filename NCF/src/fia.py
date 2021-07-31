@@ -1,6 +1,6 @@
 import numpy as np
 
-from NCF.src.scripts.pure_fia import PureFIA
+from NCF.src.pure_fia import PureFIA
 
 
 class FIA(PureFIA):

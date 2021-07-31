@@ -2,7 +2,7 @@ from time import time
 
 import numpy as np
 
-from NCF.src.scripts.helper import get_scores
+from NCF.src.helper import get_scores
 from commons.fia_template import FIATemplate
 
 

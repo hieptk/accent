@@ -1,7 +1,7 @@
-from NCF.src.scripts.get_counterfactual import generate_cf
-from NCF.src.scripts.get_new_scores import get_new_scores
-from NCF.src.scripts.helper import parse_args
-from NCF.src.scripts.retrain import retrain
+from NCF.src.get_counterfactual import generate_cf
+from NCF.src.get_new_scores import get_new_scores
+from NCF.src.helper import parse_args
+from NCF.src.retrain import retrain
 from commons.helper import evaluate_files
 
 

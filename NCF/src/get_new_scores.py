@@ -2,8 +2,8 @@ from pathlib import Path
 
 import tensorflow.compat.v1 as tf
 
-from NCF.src.scripts.helper import get_model
-from NCF.src.scripts.helper import get_scores as get_scores_per_user
+from NCF.src.helper import get_model
+from NCF.src.helper import get_scores as get_scores_per_user
 from commons.helper import prepare_new_scores, counterfactual2path, get_new_scores_main
 
 

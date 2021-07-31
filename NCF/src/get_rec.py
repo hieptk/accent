@@ -1,7 +1,7 @@
 import pandas as pd
 import tensorflow.compat.v1 as tf
 
-from NCF.src.scripts.helper import get_model, get_scores
+from NCF.src.helper import get_model, get_scores
 
 
 def get_rec():

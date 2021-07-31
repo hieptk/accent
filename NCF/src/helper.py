@@ -82,7 +82,7 @@ def get_model(use_recs=False):
     args = parse_args()
     if args.dataset == 'movielens':
         batch_size = 1246
-        path = os.path.join(os.path.dirname(__file__), '../../data')
+        path = os.path.join(os.path.dirname(__file__), '../data')
         data_sets = load_movielens(path, batch=batch_size, use_recs=use_recs)
     else:
         raise NotImplementedError
@@ -118,7 +118,7 @@ def get_model(use_recs=False):
         damping=damping,
         decay_epochs=[10000, 20000],
         mini_batch=True,
-        train_dir='output',
+        train_dir='scripts/output',
         log_dir='log',
         avextol=avextol,
         model_name='%s_%s_explicit_damping%.0e_avextol%.0e_embed%d_maxinf%d_wd%.0e' % (
