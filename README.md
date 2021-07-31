@@ -8,6 +8,8 @@ Details of ACCENT can be found here: https://dl.acm.org/doi/10.1145/3404835.3463
 	<img src="https://github.com/hieptk/accent/raw/main/accent.png" width=800>
 </p>
 
+All results in the paper were produced using commit 9a816832e43afb6cd68eea600341a3fffe37db1c.
+
 ## Environment
 To use this code, the following software are required:
 - Python 3.7
