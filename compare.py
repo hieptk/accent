@@ -7,6 +7,11 @@ import argparse
 
 
 def get_success(file):
+    """
+    get successful instances of an algorithm
+    :param file: the result file of the algorithm that you want to evaluate
+    :return: a binary Numpy array where the position i is 1 if the i-th instance was successful
+    """
     data = pd.read_csv(file)
 
     res = np.zeros(data.shape[0], dtype=np.bool_)
@@ -26,6 +31,12 @@ def get_success(file):
 
 
 def get_size(file, mask):
+    """
+    get the size of explanations where the corresponding bit in mask is 1
+    :param file: the result file of the algorithm that you want to evaluate
+    :param mask: a bitmask where position i is set to 0 if instance i should not be considered
+    :return: a Numpy array with size of all considered explanations
+    """
     data = pd.read_csv(file)
     data = data[mask].reset_index(drop=True)
 
@@ -40,6 +51,10 @@ def get_size(file, mask):
 
 
 def print_result(file):
+    """
+    print percentage and average size of counterfactual explanations
+    :param file: the result file of the algorithm that you want to evaluate
+    """
     res = get_success(file)
     print(f'{file}: {np.mean(res)}')
 
@@ -48,6 +63,17 @@ def print_result(file):
 
 
 def compare_algo(file, file2):
+    """
+    compare results of two algorithms. The function will print the following information:
+    - The counterfactual percentage of each algorithm
+    - A contingency table comparing two algorithms
+    - The p-value of the McNemar's test comparing the counterfactual effect
+    - The average counterfactual explanation size of each algorithm
+    - The p-value of the t-test comparing these sizes.
+
+    :param file: the result file of the first algorithm that you want to compare
+    :param file2: the result file of the second algorithm that you want to compare
+    """
     cont_table = np.zeros((2, 2))
     res = get_success(file)
     res2 = get_success(file2)

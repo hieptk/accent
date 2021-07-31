@@ -6,6 +6,9 @@ from retrain import retrain
 
 
 def main():
+    """
+    run the full experiment for an algorithm passed via the command line argument --algo
+    """
     args = parse_args()
     ks = [5, 10, 20]
     generate_cf(args.algo, ks)

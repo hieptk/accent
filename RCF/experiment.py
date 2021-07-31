@@ -5,6 +5,9 @@ from evaluate_counterfactual import evaluate
 
 
 def main():
+    """
+    run the full experiment for an algorithm passed via the command line argument --algo
+    """
     ks = [5, 10, 20]
     generate_cf(ks)
     retrain(ks)

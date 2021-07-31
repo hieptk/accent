@@ -13,7 +13,6 @@ if __name__ == '__main__':
     # Training
     model = get_new_RCF_model(data, args)
 
-    # model.evaluate()
     begin = time()
     print("begin train {}".format(begin))
     model.train(data, args, seed=2512)
