@@ -15,6 +15,8 @@ Each subdirectory contains a ```data``` folder with the necessary data for the m
 ```NCF``` is further divided into 2 subfolders: ```influence``` contains all source code related to the implementation of influence functions,
 and ```scripts``` contains the implementation of NCF.
 
+All supplementary materials (data, intermmediate results, pretrained models, virtual machine) can be download [here](https://zenodo.org/record/5150837#.YQZI5FMzZz8).
+
 ## Environment
 To use this code, the following software are required:
 - Python 3.7
@@ -25,7 +27,7 @@ To use this code, the following software are required:
 - scikit-learn
 - matplotlib
 
-A virtual machine with all required software can be downloaded [here](https://mega.nz/file/uJBkyBqD#MxNVw8qkAvzKAgeFTSq6S0wjeVeZG-Mi758bXYcYZuQ). Username: ```accent```, password: ```accent```.
+A virtual machine with all required software can be downloaded [here](https://zenodo.org/record/5150837/files/ubuntu2.ova?download=1). Username: ```accent```, password: ```accent```.
 
 Alternatively, you can follow these steps to setup the environment from a fresh install of Ubuntu 20.04.
 1. Download the source code [here](https://github.com/hieptk/accent/archive/refs/heads/main.zip) and unzip.
@@ -37,7 +39,7 @@ Alternatively, you can follow these steps to setup the environment from a fresh 
 ## Dataset
 We use the popular MovieLens 100K dataset (https://grouplens.org/datasets/movielens/100k/), which contains 100K ratings on a 1 − 5 scale by 943 users on 1682 movies. To conform to the implicit feedback setting in RCF, we binarized ratings to a positive label if it is 3 or above, and a negative label otherwise. We removed all users with < 10 positive ratings or < 10 negative ratings so that the profiles are big and balanced enough for learning discriminative user models. This pruning results in 452 users, 1654 movies, and 61054 interactions in our dataset.
 
-A zip file containing all data can be downloaded [here](https://mega.nz/file/WFZXFCrR#TwuDerW7Gk5tyBzp4uM_YZzF3lRVsc8qblTA2vLhApg).
+A zip file containing all data can be downloaded [here](https://zenodo.org/record/5150837/files/data.zip?download=1).
 
 Alternatively, to preprocess data from the original MovieLens dataset, follow these steps:
 1. Download and unzip the original dataset [here](https://files.grouplens.org/datasets/movielens/ml-100k.zip).
@@ -95,7 +97,7 @@ Similarly, an RCF model can be trained by running:
 cd RCF/src
 python3 train.py
 ```
-The final model will be saved in a directory named ```pretrain-rcf```. A pretrained model can be downloaded [here](https://mega.nz/file/6VQ0TZhB#pj_u5gSA8YY_XIupk32X1GwQCqVeDRrMkW3baRTvL3E).
+The final model will be saved in a directory named ```pretrain-rcf```. A pretrained model can be downloaded [here](https://zenodo.org/record/5150837/files/pretrain-rcf.zip?download=1).
 
 ## Running Experiment
 For each algorithm, run the following commands to run the experiment. The script will generate explanations, retrain models, and evaluate results.
@@ -125,7 +127,7 @@ A result file has 452 rows (excluding the header), one for each user. Each row h
 - ```actual_scores_0```, ..., ```actual_scores_4```: the actual scores of the top-k after 5 retrains
 - ```actual_scores_avg```: the average scores of 5 retrains.
 
-The precomputed result files are uploaded [here](https://mega.nz/file/rQ5WkIwB#E8wp5DVbzAeJS-OF_tW_aLIIXfWjVO4rNKgJQ_j4fSo).
+The precomputed result files are uploaded [here](https://zenodo.org/record/5150837/files/results.zip?download=1).
 
 ## Reproducing Table 1
 To get the counterfactual percentage and average set size as presented in Table 1, run:
